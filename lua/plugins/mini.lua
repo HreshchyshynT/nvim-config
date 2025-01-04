@@ -7,6 +7,7 @@ return {
       local statusline = require 'mini.statusline'
       statusline.setup { use_icons = true }
       require('mini.icons').setup()
+      require('mini.surround').setup()
     end,
   },
 }
