@@ -10,8 +10,8 @@ return {              -- Useful plugin to show you pending keybinds.
       { '<leader>d', name = '[D]ocument',  hidden = true },
       { '<leader>s', name = '[S]earch' },
       { '<leader>w', name = '[W]orkspace', hidden = true },
-      { '<leader>t', name = '[T]oggle',    hidden = true },
-      { '<leader>h', name = 'Git [H]unk',  hidden = true },
+      { '<leader>t', name = '[T]oggle' },
+      { '<leader>h', name = 'Git [H]unk' },
       { '<leader>N', name = '[N]eotree',   hidden = true },
       {
         { mode = 'v' },
