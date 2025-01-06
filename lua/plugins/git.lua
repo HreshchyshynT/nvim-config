@@ -1,3 +1,27 @@
+local function toggle_blame()
+  local found = false
+  local total_windows = vim.api.nvim_tabpage_list_wins(0) -- Get all windows in the current tab
+
+  for _, win in ipairs(total_windows) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+    if filetype == "fugitiveblame" then
+      vim.api.nvim_win_close(win, true) -- Close the window
+      found = true
+    end
+  end
+
+  if not found then
+    local current_window = vim.api.nvim_get_current_win()
+    local current_view = vim.fn.winsaveview() -- Save the current scroll and cursor position
+
+    vim.cmd('Git blame')
+
+    vim.api.nvim_set_current_win(current_window)
+    vim.fn.winrestview(current_view) -- Restore the scroll and cursor position
+  end
+end
+
 return {
   {
     'lewis6991/gitsigns.nvim',
@@ -56,9 +80,14 @@ return {
           gitsigns.diffthis '@'
         end, { desc = 'git [D]iff against last commit' })
         -- Toggles
-        map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = '[T]oggle git show [b]lame line' })
         map('n', '<leader>tD', gitsigns.toggle_deleted, { desc = '[T]oggle git show [D]eleted' })
       end,
     },
+  },
+  {
+    'tpope/vim-fugitive',
+    config = function()
+      vim.keymap.set('n', '<leader>tb', toggle_blame, { desc = '[T]oggle git show [b]lame line' })
+    end
   },
 }
