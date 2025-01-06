@@ -1,5 +1,5 @@
 return {
   {
-    "dressing.nvim"
-  }
+    "dressing.nvim",
+  },
 }
