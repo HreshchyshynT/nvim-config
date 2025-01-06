@@ -1,4 +1,14 @@
 return {
+  -- add blink.compat
+  {
+    "saghen/blink.compat",
+    -- use the latest release, via version = '*', if you also use the latest release for blink.cmp
+    version = "*",
+    -- lazy.nvim will automatically load the plugin when it's required by blink.cmp
+    lazy = true,
+    -- make sure to set opts so that lazy.nvim calls blink.compat's setup
+    opts = {},
+  },
   {
     "saghen/blink.cmp",
     dependencies = "rafamadriz/friendly-snippets",
@@ -29,6 +39,35 @@ return {
       },
       sources = {
         cmdline = {},
+        default = {
+          "lsp",
+          "path",
+          "snippets",
+          "buffer",
+          "avante_commands",
+          "avante_mentions",
+          "avante_files",
+        },
+        providers = {
+          avante_commands = {
+            name = "avante_commands",
+            module = "blink.compat.source",
+            score_offset = 90, -- show at a higher priority than lsp
+            opts = {},
+          },
+          avante_files = {
+            name = "avante_commands",
+            module = "blink.compat.source",
+            score_offset = 100, -- show at a higher priority than lsp
+            opts = {},
+          },
+          avante_mentions = {
+            name = "avante_mentions",
+            module = "blink.compat.source",
+            score_offset = 1000, -- show at a higher priority than lsp
+            opts = {},
+          },
+        },
       },
     },
 
