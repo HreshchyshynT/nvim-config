@@ -9,10 +9,6 @@ return {
       auto_suggestions_provider = "copilot",
       copilot = { model = "claude-3.5-sonnet" },
       hints = { enabled = false },
-      file_selector = {
-        provider = "fzf",
-        provider_opts = {},
-      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
@@ -22,6 +18,7 @@ return {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       --- The below dependencies are optional,
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "echasnovski/mini.icons",
       "zbirenbaum/copilot.lua", -- for providers='copilot'
       {
