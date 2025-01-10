@@ -8,7 +8,13 @@ return {
       provider = "copilot",
       auto_suggestions_provider = "copilot",
       copilot = { model = "claude-3.5-sonnet" },
-      hints = { enabled = false },
+      hints = { enabled = true },
+      suggestion = {
+        accept = "<M-l>",
+        next = "<M-]>",
+        prev = "<M-[>",
+        dismiss = "<C-]>",
+      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
@@ -47,5 +53,11 @@ return {
         ft = { "markdown", "Avante" },
       },
     },
+    init = function()
+      -- add which key info: <leader>a is [a]vante
+      require("which-key").add({
+        { "<leader>a", name = "[a]vante" },
+      })
+    end,
   },
 }
