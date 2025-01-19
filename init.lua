@@ -132,6 +132,11 @@ vim.keymap.set("n", "<C-f>", "<C-f>zz", { noremap = true })
 vim.keymap.set("n", "<C-b>", "<C-b>zz", { noremap = true })
 --
 
+-- quick fix mappings to navigate through the list
+vim.keymap.set("n", "<leader><C-n>", "<cmd>cnext<CR>", { desc = "Go to the next item in the quickfix list" })
+vim.keymap.set("n", "<leader><C-p>", "<cmd>cprev<CR>", { desc = "Go to the previous item in the quickfix list" })
+--
+
 -- views can only be fully collapsed with the global statusline
 vim.opt.laststatus = 3
 
