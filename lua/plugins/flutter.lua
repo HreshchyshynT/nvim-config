@@ -14,7 +14,7 @@ return {
             "handleWindowFocusChanged mWindowFocusChanged false mUpcomingWindowFocus true mAdded true"
           )
         end,
-        focus_on_open = false,
+        open_cmd = "vsplit equalalways", -- command to use to open the log buffer
       },
     })
     local telescope = require("telescope")
