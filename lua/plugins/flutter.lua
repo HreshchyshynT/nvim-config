@@ -10,9 +10,10 @@ return {
       fvm = true,
       dev_log = {
         filter = function(line)
-          return not line:match(
-            "handleWindowFocusChanged mWindowFocusChanged false mUpcomingWindowFocus true mAdded true"
-          )
+          return line
+            and not line:match(
+              "handleWindowFocusChanged mWindowFocusChanged false mUpcomingWindowFocus true mAdded true"
+            )
         end,
         open_cmd = "vsplit equalalways", -- command to use to open the log buffer
       },
