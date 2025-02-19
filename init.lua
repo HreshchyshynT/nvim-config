@@ -111,25 +111,9 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
--- Trying to copy shortcuts from my JetBrains IDEA config
-vim.keymap.set(
-  "i",
-  "<S-Enter>",
-  "<Esc>o",
-  { desc = "insert empty line below and move cursor on it", noremap = true, silent = true }
-)
-vim.keymap.set(
-  "i",
-  "<C-Enter>",
-  "<Esc>O",
-  { desc = "insert empty line above and move cursor on it", noremap = true, silent = true }
-)
-vim.keymap.set("n", "<C-d>", "yyp", { noremap = true, silent = true })
-vim.keymap.set("v", "<C-d>", "y`>p`[v`]", { noremap = true, silent = true })
-
 -- center cursor after scrolling forward/backward
-vim.keymap.set("n", "<C-f>", "<C-f>zz", { noremap = true })
-vim.keymap.set("n", "<C-b>", "<C-b>zz", { noremap = true })
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 --
 
 -- quick fix mappings to navigate through the list
@@ -139,6 +123,16 @@ vim.keymap.set("n", "<leader><C-p>", "<cmd>cprev<CR>", { desc = "Go to the previ
 
 -- views can only be fully collapsed with the global statusline
 vim.opt.laststatus = 3
+
+-- move lines in visual mode
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+-- center search results
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+vim.keymap.set("v", "<leader>p", '"_dP', { desc = "Paste over selection without yanking" })
 
 require("config.lazy")
 
