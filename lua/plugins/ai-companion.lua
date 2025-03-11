@@ -20,7 +20,7 @@ return {
           ours = "co",
           theirs = "ct",
           all_theirs = "ca",
-          both = "", -- cb conflicts with
+          both = "acb", -- cb conflicts with
           cursor = "cc",
           next = "]x",
           prev = "[x",
@@ -42,6 +42,19 @@ return {
       },
       behaviour = {
         auto_suggestions = false, -- Experimental stage
+      },
+      --- @class AvanteFileSelectorConfig
+      file_selector = {
+        --- @alias FileSelectorProvider "native" | "fzf" | "mini.pick" | "snacks" | "telescope" | string | fun(params: avante.file_selector.IParams|nil): nil
+        provider = "telescope",
+        -- Options override for custom providers
+        provider_opts = {},
+      },
+      highlights = {
+        diff = {
+          current = "Normal",
+          incoming = "Normal",
+        },
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`

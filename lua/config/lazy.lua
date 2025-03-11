@@ -6,7 +6,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out,                            "WarningMsg" },
+      { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -26,13 +26,13 @@ require("lazy").setup({
     -- import your plugins
     { import = "plugins" },
     {
-      'ellisonleao/gruvbox.nvim',
+      "ellisonleao/gruvbox.nvim",
       priority = 1000,
       config = function()
-        require('gruvbox').setup()
-        vim.cmd.colorscheme 'gruvbox'
+        require("gruvbox").setup()
+        vim.cmd.colorscheme("gruvbox")
       end,
-    }
+    },
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
