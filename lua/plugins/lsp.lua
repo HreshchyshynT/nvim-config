@@ -1,4 +1,16 @@
 return {
+  {
+    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+    -- used for completion, annotations and signatures of Neovim apis
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {
+      library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
   { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -10,12 +22,17 @@ return {
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { "j-hui/fidget.nvim", opts = {} },
-
-      -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
-      -- used for completion, annotations and signatures of Neovim apis
-      { "folke/neodev.nvim", opts = {} },
     },
     config = function()
+      vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+        pattern = {
+          "Fastfile",
+          "Appfile",
+          "Matchfile",
+          "Pluginfile",
+        },
+        command = "set filetype=ruby",
+      })
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
         callback = function(event)
@@ -73,6 +90,36 @@ return {
             vim.lsp.buf.signature_help,
             { desc = "Display method signature help in the insert mode", noremap = true }
           )
+
+          -- Diagnostic Config
+          -- See :help vim.diagnostic.Opts
+          vim.diagnostic.config({
+            severity_sort = true,
+            float = { border = "rounded", source = "if_many" },
+            underline = { severity = vim.diagnostic.severity.ERROR },
+            signs = vim.g.have_nerd_font and {
+              text = {
+                [vim.diagnostic.severity.ERROR] = "󰅚 ",
+                [vim.diagnostic.severity.WARN] = "󰀪 ",
+                [vim.diagnostic.severity.INFO] = "󰋽 ",
+                [vim.diagnostic.severity.HINT] = "󰌶 ",
+              },
+            } or {},
+            virtual_text = {
+              source = "if_many",
+              spacing = 2,
+              format = function(diagnostic)
+                local diagnostic_message = {
+                  [vim.diagnostic.severity.ERROR] = diagnostic.message,
+                  [vim.diagnostic.severity.WARN] = diagnostic.message,
+                  [vim.diagnostic.severity.INFO] = diagnostic.message,
+                  [vim.diagnostic.severity.HINT] = diagnostic.message,
+                }
+                return diagnostic_message[diagnostic.severity]
+              end,
+            },
+          })
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -148,6 +195,14 @@ return {
             },
           },
         },
+        ruby_lsp = {
+          cmd = (function()
+            local cmd_result = vim.fn.system("ruby -v")
+            local ruby_version = vim.split(cmd_result, " ")
+            return { "rvm", ruby_version[2], "do", "ruby-lsp" }
+          end)(),
+          filetypes = { "ruby" },
+        },
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -192,14 +247,14 @@ return {
       require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
       require("mason-lspconfig").setup({
+        ensure_installed = {},
+        automatic_installation = false,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-            require("lspconfig")[server_name].setup(server)
+            vim.lsp.config(server_name, server)
+            vim.lsp.enable(server_name)
           end,
         },
       })
@@ -207,12 +262,13 @@ return {
   },
   { -- Autoformat
     "stevearc/conform.nvim",
-    lazy = false,
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
     keys = {
       {
         "<leader>f",
         function()
-          require("conform").format({ async = true, lsp_fallback = true })
+          require("conform").format({ async = true, lsp_format = "fallback" })
         end,
         mode = "",
         desc = "[F]ormat buffer",
@@ -225,19 +281,22 @@ return {
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
+        if disable_filetypes[vim.bo[bufnr].filetype] then
+          return nil
+        else
+          return {
+            timeout_ms = 500,
+            lsp_format = "fallback",
+          }
+        end
       end,
       formatters_by_ft = {
         lua = { "stylua" },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
-        -- You can use a sub-list to tell conform to run *until* a formatter
-        -- is found.
-        javascript = { { "prettierd", "prettier" } },
+        -- You can use 'stop_after_first' to run the first available formatter from the list
+        -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
     },
   },
