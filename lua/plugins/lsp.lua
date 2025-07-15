@@ -22,6 +22,8 @@ return {
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { "j-hui/fidget.nvim", opts = {} },
+
+      { "saghen/blink.cmp" },
     },
     config = function()
       vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
@@ -166,7 +168,7 @@ return {
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+      capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -274,6 +276,9 @@ return {
         desc = "[F]ormat buffer",
       },
     },
+    -- This will provide type hinting with LuaLS
+    ---@module "conform"
+    ---@type conform.setupOpts
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
@@ -286,20 +291,28 @@ return {
         else
           return {
             lsp_format = "fallback",
+            timeout_ms = 500,
           }
         end
       end,
       formatters_by_ft = {
         lua = { "stylua" },
+        rust = { "rustfmt", lsp_format = "fallback" },
         -- Conform can also run multiple formatters sequentially
         python = { "black" },
-        --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        dart = { "dart_format" },
+        javascript = { "prettierd" },
       },
       formatters = {
         black = {
           prepend_args = { "--fast" },
+        },
+        dart_format = {
+          command = "dart",
+          args = function(ctx)
+            return { "format", ctx.filename }
+          end,
         },
       },
     },
