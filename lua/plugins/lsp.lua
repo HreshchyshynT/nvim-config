@@ -310,7 +310,7 @@ return {
         },
         dart_format = {
           command = "dart",
-          args = function(ctx)
+          args = function(_, ctx)
             return { "format", ctx.filename }
           end,
         },
