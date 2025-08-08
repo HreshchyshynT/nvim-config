@@ -75,6 +75,8 @@ vim.opt.scrolloff = 10
 -- Enable project related configs
 vim.opt.exrc = true
 
+vim.o.winborder = "rounded"
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 

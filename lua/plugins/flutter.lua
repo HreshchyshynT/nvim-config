@@ -8,6 +8,7 @@ return {
     local flutter = require("flutter-tools")
     flutter.setup({
       fvm = true,
+      flutter_path = "$HOME/.fvm/bin",
       widget_guides = {
         enabled = true,
       },
