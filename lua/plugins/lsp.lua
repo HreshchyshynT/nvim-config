@@ -182,7 +182,7 @@ return {
 
       local util = require("lspconfig.util")
       vim.lsp.config("sourcekit", {
-        cmd = { "xcrun", "sourcekit-lsp" },
+        cmd = { vim.trim(vim.fn.system("xcrun -f sourcekit-lsp")) },
         filetypes = { "swift", "objc", "objcpp", "c", "cpp" },
         root_dir = function(bufnr, on_dir)
           local filename = vim.api.nvim_buf_get_name(bufnr)
@@ -194,13 +194,18 @@ return {
               or vim.fs.dirname(vim.fs.find(".git", { path = filename, upward = true })[1])
           )
         end,
-        capabilities = {
+        on_init = function(client)
+          -- HACK: to fix some issues with LSP
+          -- more details: https://github.com/neovim/neovim/issues/19237#issuecomment-2237037154
+          client.offset_encoding = "utf-8"
+        end,
+        capabilities = vim.tbl_deep_extend("force", {}, capabilities, {
           workspace = {
             didChangeWatchedFiles = {
               dynamicRegistration = true,
             },
           },
-        },
+        }),
       })
       vim.lsp.enable("sourcekit")
 
@@ -319,6 +324,7 @@ return {
         end
       end,
       formatters_by_ft = {
+        swift = { "swiftformat" },
         lua = { "stylua" },
         rust = { "rustfmt", lsp_format = "fallback" },
         -- Conform can also run multiple formatters sequentially
