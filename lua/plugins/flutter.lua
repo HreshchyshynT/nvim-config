@@ -9,9 +9,6 @@ return {
     flutter.setup({
       fvm = true,
       flutter_path = "$HOME/.fvm/bin",
-      widget_guides = {
-        enabled = true,
-      },
       dev_log = {
         filter = function(line)
           return line
