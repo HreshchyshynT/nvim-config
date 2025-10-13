@@ -333,7 +333,9 @@ return {
         -- You can use 'stop_after_first' to run the first available formatter from the list
         dart = { "dart_format" },
         javascript = { "prettierd" },
+        javascriptreact = { "prettierd" },
         typescript = { "prettierd" },
+        typescriptreact = { "prettierd" },
       },
       formatters = {
         black = {
