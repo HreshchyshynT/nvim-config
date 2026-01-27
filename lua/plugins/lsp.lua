@@ -342,7 +342,7 @@ return {
           prepend_args = { "--fast" },
         },
         dart_format = {
-          command = "dart",
+          command = "fvm dart",
           args = function(_, ctx)
             return { "format", ctx.filename }
           end,
