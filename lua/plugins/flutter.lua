@@ -8,7 +8,7 @@ return {
     local flutter = require("flutter-tools")
     flutter.setup({
       fvm = true,
-      flutter_path = "$HOME/.fvm/bin",
+      flutter_path = vim.fn.expand("$HOME") .. "/.fvm/bin",
       dev_log = {
         filter = function(line)
           return line
