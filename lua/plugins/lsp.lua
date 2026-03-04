@@ -242,6 +242,7 @@ return {
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         ts_ls = {},
+        kotlin_lsp = {},
         --
 
         lua_ls = {
